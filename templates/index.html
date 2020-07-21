@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS and JS-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <title>Covid-AI</title>
+    
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center text-secondary mt-4">Covid AI Detector</h1> 
+      <div class="row mt-0 mt-md-5">
+
+        <div class="col-12 col-md-5 mx-auto">          
+          <form runat="server" enctype="multipart/form-data" action="/upload" method="post" id='imageUploadForm' class="text-center mb-md-0 mb-5">
+            <img class="mt-3" id="image" src="/static/chest-x-ray.jpg" alt="your image" style="width:100%;height:100%;border: 5px solid black" name="image"/>
+            <label class="btn btn-secondary mt-2">
+              <i class="fa fa-upload text-white" aria-hidden="true"></i> Upload Image
+              <input type='file' id="imgInp" name="imageIN" accept="image/*" style="display: none;"/>
+            </label>
+          </form>
+          <button id='myBtn' style="width: 50%;display: none;">Upload</button>          
+        </div>
+
+        <div class="col-12 col-md-6 mx-auto text-center mb-md-0 mb-5">
+          <h2 class="text-secondary">Results</h2> 
+          <div id="columnchart_material" style="width: 100%; height: 400px;"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <dir class="fixed-bottom text-md-right text-center p-0 mb-0">
+      <h5 class="p-2 pr-4 text-secondary">Created By Raj Soni</h5> 
+    </dir>      
+
+    <style type="text/css">
+      /* If the screen size is 600px wide or less */
+      @media screen and (max-width: 600px) {
+        .fixed-bottom {
+          position: relative;
+        }
+      }
+    </style>
+
+    <script type="text/javascript">
+
+      // image view loader
+      function readURL(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          
+          reader.onload = function(e) {
+            $('#image').attr('src', e.target.result);
+          }
+          
+          reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+      }
+      $("#imgInp").change(function() {
+        readURL(this);
+      });
+
+
+      // ajax send image to api
+      $(function() {
+          $('#myBtn').click(function() {
+              var form_data = new FormData($('#imageUploadForm')[0]);
+              $.ajax({
+                  type: 'POST',
+                  url: '/upload',
+                  data: form_data,
+                  contentType: false,
+                  cache: false,
+                  processData: false,
+                  success: function(data) {
+                      console.log(data);
+                      updateGraph(data.normal,data.covid,data.pneumonia);
+                  },
+              });
+          });
+      });
+      $("#imgInp").on("change", function() { //auto submit button
+          $("#myBtn").click();
+      });
+
+
+      //initilize graph with zeros
+      updateGraph(0,0,0);
+      // Graph updater
+      function updateGraph(normal, covid, pneumonia) {
+          var normal = normal;
+          var covid = covid;
+          var pneumonia = pneumonia    
+
+          google.charts.load('current', {'packages':['bar']});
+          google.charts.setOnLoadCallback(drawChart);
+
+          function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+              ['', 'Normal', 'Covid', 'Pneumonia'],
+              ['Disease',normal, covid, pneumonia]
+            ]);
+
+            var options = {
+              chart: {
+                // title: 'Results',
+                subtitle: 'Histogram of Predicted Results',
+              }
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+          }
+      };
+    </script>
+  </body>
+</html>
