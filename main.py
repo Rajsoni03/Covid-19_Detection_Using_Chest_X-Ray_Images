@@ -4,6 +4,7 @@ import tensorflow as tf
 import numpy as np
 import cv2
 import os
+import time
 
 app = Flask(__name__) 
 
@@ -18,7 +19,7 @@ def home_view():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-	params = {'normal' : 0, 'covid' : 0, 'pneumonia' : 0}
+	params = {'normal' : 70, 'covid' : 20, 'pneumonia' : 10}
 
 	if (request.method == 'POST'):
 		try:
@@ -29,15 +30,15 @@ def upload():
 			img = cv2.resize(img ,(224,224))
 			img = np.array(img) / 255.0
 			img = img.reshape(-1, 224, 224 ,3)
-
+			
 			prediction = model.predict(img) # get predictions on image
 			print(prediction)
 
 			params['normal'] = prediction[0,1] * 100 # add predictions on params dict
 			params['covid'] = prediction[0,0] * 100
 			params['pneumonia'] = prediction[0,2] * 100
-			params['status'] = True
 
+			params['status'] = True
 		except:
 			params['status'] = False
 	return jsonify(params)
