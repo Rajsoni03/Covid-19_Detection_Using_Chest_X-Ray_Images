@@ -12,5 +12,4 @@ Here are some screenshots of Flask Web GUI.
 
 Here are Model Classification Report and Confusion Matrix
 
-![Classification Report](screenshot/Model_evaluation.png)
-![Confusion Matrix](screenshot/Confusion_Matrix.png)
+![Classification Report](screenshot/Model_evaluation.jpg)
