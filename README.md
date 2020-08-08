@@ -6,10 +6,7 @@ https://covid-ai-app.herokuapp.com/
 
 Here are some screenshots of Flask Web GUI.
 
-![Screenshot-1](screenshot/Screenshot-1.png)
-![Screenshot-2](screenshot/Screenshot-2.png)
-![Screenshot-3](screenshot/Screenshot-3.png)
-![Screenshot-4](screenshot/Screenshot-4.png)
+![Screenshot-1](screenshot/screenshot.gif)
 
 ## In this project, the DenseNet121 architecture is used for image classification and achieves 99% accuracy.
 
