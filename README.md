@@ -1,6 +1,6 @@
 # Covid-19_Detection_Using_Chest_X-Ray_Images
 Project Link - https://covid-ai-app.herokuapp.com/<br>
-Code Link - https://colab.research.google.com/drive/1M1llJCJCZCDsOZ6Itna8CQpgNwcNr271?usp=sharing
+
 
 
 ## A Deep Learning Projects For Diagnosis of COVID Disease by Chest X-Ray Images.
